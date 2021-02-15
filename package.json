@@ -1,0 +1,15 @@
+{
+  "name": "email-server",
+  "version": "1.0.0",
+  "description": "oauth2.0 google email server",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Brian Uyeda",
+  "license": "ISC",
+  "dependencies": {
+    "googleapis": "^67.0.0",
+    "nodemailer": "^6.4.18"
+  }
+}
