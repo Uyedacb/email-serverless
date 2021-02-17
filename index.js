@@ -1,15 +1,60 @@
 const nodemailer = require("nodemailer");
-const { google } = require("googleapis");
-const {}
-const OAuth2 = google.auth.OAuth2;
+const result = require('dotenv').config();
+const got = require('got');
 
-const oauth2Client = new OAuth2(
-  "Your ClientID ", // ClientID
-  "Your Client Secret Here", // Client Secret
-  "https://developers.google.com/oauthplayground" // Redirect URL
-);
+if (result.error) {
+  throw result.error;
+}
 
-oauth2Client.setCredentials({
-  refresh_token: "Your Refresh Token Here"
-});
-const accessToken = oauth2Client.getAccessToken()
+exports.handler = async function(event) {
+  var accessToken = "";
+  try {
+    const requestAccess = await got.post('https://oauth2.googleapis.com/token',
+      {searchParams:
+        {
+        client_id: process.env.GOOG_CLIENT_ID,
+        client_secret: process.env.GOOG_SECRET_KEY,
+        grant_type: "refresh_token",
+        refresh_token: process.env.GOOG_REFRESH_KEY
+        }
+    });
+    accessToken = requestAccess.body.access_token;
+  } catch (e) {
+    console.log(e);
+  }
+  //var messageObj = JSON.parse(event.body);
+  messageObj = {sender: "test", email: "test", message: "test"};
+  let sender = "<p>From: " + messageObj.sender + "</p>";
+  let email = "<p>Email: " + messageObj.email + "</p>";
+  let message = messageObj.message;
+  const mailOptions = {
+    from: "randomemail@email.com",
+    to: "uyedaportfolio@gmail.com",
+    subject: "Node.js Email with Secure OAuth",
+    generateTextFromHTML: true,
+    html: sender + email + message
+  };
+  const smtpTransport = nodemailer.createTransport({
+    service: "gmail",
+    auth: {
+         type: "OAuth2",
+         user: "uyedaportfolio@gmail.com", 
+         clientId:  process.env.GOOG_CLIENT_ID,
+         clientSecret: process.env.GOOG_SECRET_KEY,
+         refreshToken: process.env.GOOG_REFRESH_KEY,
+         accessToken: accessToken
+    },
+    tls: {
+      rejectUnauthorized: false
+    }
+  });
+  
+  smtpTransport.sendMail(mailOptions, (error, response) => {
+    error ? console.log(error) : console.log(response);
+    smtpTransport.close();
+  });
+  return smtpTransport;
+}
+
+exports.handler();
+
