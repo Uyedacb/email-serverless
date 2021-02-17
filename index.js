@@ -28,15 +28,10 @@ exports.handler = async function(event) {
         rejectUnauthorized: false
       }
     });
-    smtpTransport.sendMail(mailOptions, (error, response) => {
-      error ? console.log(error) : console.log(response);
-      smtpTransport.close();
-    });
-    return smtpTransport;
+    // promise wrapped function, must await or Lambda will end process before finished
+    await smtpTransport.sendMail(mailOptions);
   } catch (e) {
     console.log(e);
   }
 }
-
-exports.handler();
 
