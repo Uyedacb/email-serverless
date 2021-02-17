@@ -1,5 +1,4 @@
 const nodemailer = require("nodemailer");
-const result = require('dotenv').config();
 const got = require('got');
 
 if (result.error) {
@@ -8,6 +7,7 @@ if (result.error) {
 
 exports.handler = async function(event) {
   var accessToken = "";
+  // grab access token from google auth2.0
   try {
     const requestAccess = await got.post('https://oauth2.googleapis.com/token',
       {searchParams:
@@ -34,6 +34,7 @@ exports.handler = async function(event) {
     generateTextFromHTML: true,
     html: sender + email + message
   };
+  // set Auth2.0 variables for Gmail
   const smtpTransport = nodemailer.createTransport({
     service: "gmail",
     auth: {
@@ -48,7 +49,6 @@ exports.handler = async function(event) {
       rejectUnauthorized: false
     }
   });
-  
   smtpTransport.sendMail(mailOptions, (error, response) => {
     error ? console.log(error) : console.log(response);
     smtpTransport.close();
