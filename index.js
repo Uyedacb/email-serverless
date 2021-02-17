@@ -1,5 +1,4 @@
 const nodemailer = require("nodemailer");
-const result = require('dotenv').config();
 
 exports.handler = async function(event) {
   //var messageObj = JSON.parse(event.body);
