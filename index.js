@@ -1,10 +1,6 @@
 const nodemailer = require("nodemailer");
 const got = require('got');
 
-if (result.error) {
-  throw result.error;
-}
-
 exports.handler = async function(event) {
   var accessToken = "";
   // grab access token from google auth2.0
