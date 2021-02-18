@@ -9,7 +9,7 @@ exports.handler = async function(event) {
   const mailOptions = {
     from: "randomemail@email.com",
     to: "randomemail@email.com",
-    subject: "Node.js Email with Secure OAuth",
+    subject: "Node.js Email with Secure OAuth2.0",
     generateTextFromHTML: true,
     html: sender + email + message
   };
